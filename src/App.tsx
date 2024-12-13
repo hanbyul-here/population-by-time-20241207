@@ -1,55 +1,30 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import DeckGL from "deck.gl";
-import { MapViewState } from "@deck.gl/core";
+import { MapViewState, MapView } from "@deck.gl/core";
 import { GeoJsonLayer, ColumnLayer, SolidPolygonLayer } from "@deck.gl/layers";
 import centroid from "@turf/centroid";
 import { csv } from "d3-fetch";
-import { Map } from "react-map-gl/maplibre";
-import FragColumnLayer from "./FragColumnLayer";
+import {
+  generateHex,
+  generateWrappingHex,
+  ageColorSchemes,
+  genderColorSchemes,
+} from "./utils";
 
 const INITIAL_VIEW_STATE: MapViewState = {
   longitude: 126.97,
   latitude: 37.56,
   zoom: 13,
   pitch: 30,
-  bearing: 0,
+  // bearing: 0,
 };
-
-/**
- * Generate a GeoJSON object representing a hexagon centered at given coordinates.
- * @param {number} lat - Latitude of the center point.
- * @param {number} lng - Longitude of the center point.
- * @param {number} radius - Radius of the hexagon in meters.
- * @returns {object} GeoJSON Feature representing the hexagon.
- */
-function generateHex({ center, offset, num, radius }) {
-  const { lat, lon } = center;
-  const points = [];
-  const sides = num;
-
-  // Calculate the vertices of the hexagon
-  if (num < 6) points.push([lon, lat]);
-  for (let i = offset; i < offset + sides; i++) {
-    const angle = i * 60 * (Math.PI / 180); // Convert degrees to radians
-    const dx = radius * Math.cos(angle);
-    const dy = radius * Math.sin(angle);
-
-    // Convert meter offsets to latitude and longitude
-    const newLat = lat + dy / 111111; // 1° latitude ≈ 111,111 meters
-    const newLon = lon + dx / (111111 * Math.cos((lat * Math.PI) / 180)); // Adjust for longitude scaling
-    points.push([newLon, newLat]);
-  }
-  // Close hex
-  points.push(points[0]);
-  return points;
-}
-
 function App() {
   const [dong, setDong] = useState([]);
   const [dec, setDec] = useState([]);
   const [nov, setNov] = useState([]);
   const [value, setValue] = useState("20");
   const [selectedCategory, setSelectedCategory] = useState("total");
+  const [isSplitScreen, setIsSplitScreen] = useState(false);
 
   useEffect(() => {
     async function loadBoundaries() {
@@ -67,6 +42,9 @@ function App() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  const handleToggle = () => {
+    setIsSplitScreen(!isSplitScreen);
+  };
 
   const currentData = useMemo(() => {
     return dec.filter((e) => e.time == value);
@@ -76,11 +54,11 @@ function App() {
     return nov.filter((e) => e.time == value);
   }, [value, nov]);
 
-  function getPolygonLayers(selectedCategory: string, data) {
+  function getPolygonLayers(selectedCategory: string, data, prefix) {
     if (selectedCategory === "total") {
       return [
         new SolidPolygonLayer({
-          id: "polygon-layers",
+          id: `${prefix}-polygon-layers`,
           data,
           extruded: true,
           getPolygon: (d) => {
@@ -89,12 +67,20 @@ function App() {
             );
             if (currentDong) {
               const centerPoint = centroid(currentDong).geometry.coordinates;
-              const hex = generateHex({
-                center: { lat: centerPoint[1], lon: centerPoint[0] },
-                offset: 0,
-                num: 6,
-                radius: 100,
-              });
+              const hex =
+                prefix == "dec"
+                  ? generateHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: 0,
+                      num: 6,
+                      radius: 100,
+                    })
+                  : generateWrappingHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: 0,
+                      num: 6,
+                      radius: 100,
+                    });
               return hex;
             } else return [];
           },
@@ -109,7 +95,7 @@ function App() {
     } else if (selectedCategory === "gender") {
       return ["f", "m"].map((genderKeyword, idx) => {
         return new SolidPolygonLayer({
-          id: `polygon-layers-${genderKeyword}`,
+          id: `${prefix}-polygon-layers-${genderKeyword}`,
           data,
           extruded: true,
           getPolygon: (d) => {
@@ -118,12 +104,20 @@ function App() {
             );
             if (currentDong) {
               const centerPoint = centroid(currentDong).geometry.coordinates;
-              const hex = generateHex({
-                center: { lat: centerPoint[1], lon: centerPoint[0] },
-                offset: idx * 3 + 1,
-                num: 4,
-                radius: 100,
-              });
+              const hex =
+                prefix == "dec"
+                  ? generateHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: idx * 3 + 1,
+                      num: 4,
+                      radius: 100,
+                    })
+                  : generateWrappingHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: idx * 3 + 1,
+                      num: 4,
+                      radius: 100,
+                    });
               return hex;
             } else return [];
           },
@@ -135,16 +129,15 @@ function App() {
             return currentPop / 30;
           },
           getFillColor: (d) => {
-            return genderKeyword === "f"
-              ? [100, 200, 100, 255]
-              : [100, 100, 200, 255];
+            const alpha = prefix === "dec" ? 255 : 220;
+            return [...genderColorSchemes[idx], alpha];
           },
         });
       });
     } else if (selectedCategory === "agegroup") {
       return ["10", "20", "30", "40", "50", "60"].map((ageKeyword, idx) => {
         return new SolidPolygonLayer({
-          id: `polygon-layers-${ageKeyword}`,
+          id: `${prefix}-polygon-layers-${ageKeyword}`,
           data,
           extruded: true,
           getPolygon: (d) => {
@@ -153,12 +146,20 @@ function App() {
             );
             if (currentDong) {
               const centerPoint = centroid(currentDong).geometry.coordinates;
-              const hex = generateHex({
-                center: { lat: centerPoint[1], lon: centerPoint[0] },
-                offset: idx,
-                num: 2,
-                radius: 100,
-              });
+              const hex =
+                prefix == "dec"
+                  ? generateHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: idx,
+                      num: 2,
+                      radius: 100,
+                    })
+                  : generateWrappingHex({
+                      center: { lat: centerPoint[1], lon: centerPoint[0] },
+                      offset: idx,
+                      num: 2,
+                      radius: 100,
+                    });
               return hex;
             } else return [];
           },
@@ -169,27 +170,45 @@ function App() {
             }, 0);
             return currentPop / 30;
           },
-          getFillColor: (d) => {
-            return [30 * idx, 255 - 30 * idx, 100, 255];
+          getFillColor: (_) => {
+            const alpha = prefix === "dec" ? 255 : 220;
+            return [...ageColorSchemes[idx], alpha];
           },
         });
       });
     }
   }
 
-  const polygonLayers = getPolygonLayers(selectedCategory, currentData);
-  const novPolygonLayers = getPolygonLayers(selectedCategory, currentNovData);
+  const polygonLayers = getPolygonLayers(selectedCategory, currentData, "dec");
+  const novPolygonLayers = getPolygonLayers(
+    selectedCategory,
+    currentNovData,
+    "nov"
+  );
 
-  const layers = [
-    new GeoJsonLayer({
-      id: "geojson-layer",
-      data: dong,
-      getLineColor: [255, 255, 255, 255],
-      getFillColor: [150, 150, 150, 205],
-      getLineWidth: 10,
-    }),
-    ...polygonLayers,
-  ];
+  const layers = isSplitScreen
+    ? [
+        new GeoJsonLayer({
+          id: "all-geojson-layer",
+          data: dong,
+          getLineColor: [255, 255, 255, 255],
+          getFillColor: [120, 120, 120, 205],
+          getLineWidth: 10,
+        }),
+        ...polygonLayers,
+        ...novPolygonLayers,
+      ]
+    : [
+        new GeoJsonLayer({
+          id: "all-geojson-layer",
+          data: dong,
+          getLineColor: [255, 255, 255, 255],
+          getFillColor: [120, 120, 120, 205],
+          getLineWidth: 10,
+        }),
+        ...polygonLayers,
+      ];
+
   return (
     <div>
       <DeckGL
@@ -211,6 +230,16 @@ function App() {
         <button onClick={() => setSelectedCategory("agegroup")}>
           Age Groups
         </button>
+      </div>
+      <div style={{ width: "300px", position: "absolute", top: 120 }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={isSplitScreen}
+            onChange={handleToggle}
+          />
+          Show the previous week data
+        </label>
       </div>
     </div>
   );
