@@ -61,7 +61,7 @@ export function generateWrappingHex({ center, offset, num, radius }) {
   return points;
 }
 
-export const ageColorSchemes = [
+export const ageColors = [
   [237, 248, 251],
   [204, 236, 230],
   [153, 216, 201],
@@ -70,7 +70,9 @@ export const ageColorSchemes = [
   [0, 109, 44],
 ];
 
-export const genderColorSchemes = [
+export const genderColors = [
   [90, 180, 172],
   [216, 179, 101],
 ];
+
+export const totalColor = [200, 100, 100];
