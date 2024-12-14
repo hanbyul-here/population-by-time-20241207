@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:test": "vite build",
+    "build": "vite build --mode production --base=/population-by-time-20241207",
     "lint": "eslint .",
     "preview": "vite preview"
   },
