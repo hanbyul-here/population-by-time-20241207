@@ -239,7 +239,7 @@ function App() {
         getTooltip={getTooltip}
       ></DeckGL>
       <div className="absolute bg-slate-100/80 p-3 right-2 top-2 md:w-80 w-64 rounded-sm">
-        <h1 className="font-bold md:text-lg"> 2024년 12월 7일 서울 생활인구</h1>
+        <h1 className="font-bold md:text-lg"> 2024년 12월 7일 서울생활인구</h1>
         <div className="relative mb-8">
           <span> 시간 : {value}시</span>
           <label htmlFor="labels-range-input" className="sr-only">
