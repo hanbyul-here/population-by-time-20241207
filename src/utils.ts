@@ -75,7 +75,8 @@ export const totalColor = [200, 100, 100];
 const ageGroups = ["0", "10", "20", "30", "40", "50", "60", "70"];
 export function generatePopulationTable({ data, time }) {
   let tableHTML = `
-    <h2 class="font-bold text-lg">${data.name} ${time}시</h2>
+    <small> 2024년 12월 7일</small>
+    <h2 class="font-bold text-md">${data.name} ${time}시</h2>
     <table class="table-fixed" border="1">
       <thead>
         <tr>
