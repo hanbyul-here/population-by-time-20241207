@@ -18,7 +18,7 @@ import "./App.css";
 const INITIAL_VIEW_STATE: MapViewState = {
   longitude: 126.9592942,
   latitude: 37.5216503,
-  zoom: 12,
+  zoom: 11,
   pitch: 30,
   // bearing: 0,
 };
@@ -27,7 +27,7 @@ function App() {
   const [dec, setDec] = useState([]);
   const [nov, setNov] = useState([]);
   const [value, setValue] = useState("20");
-  const [selectedCategory, setSelectedCategory] = useState("total");
+  const [selectedCategory, setSelectedCategory] = useState("gender");
   const [isSplitScreen, setIsSplitScreen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
 
@@ -117,7 +117,7 @@ function App() {
           getElevation: (d) => {
             return d.pop / 30;
           },
-          getFillColor: (d) => {
+          getFillColor: () => {
             const alpha = prefix === "dec" ? 255 : 200;
             return [...totalColor, alpha];
           },
@@ -239,9 +239,10 @@ function App() {
         getTooltip={getTooltip}
       ></DeckGL>
       <div className="absolute bg-slate-100/80 p-3 right-2 top-2 md:w-80 w-64 rounded-sm">
-        <h1 className="font-bold md:text-lg"> 2024년 12월 7일 서울생활인구</h1>
-        <div className="relative mb-8">
-          <span> 시간 : {value}시</span>
+        <h1 className="font-bold md:text-lg">
+          2024년 12월 7일 {value}시 서울생활인구
+        </h1>
+        <div className="relative md:mb-8 mb-5">
           <label htmlFor="labels-range-input" className="sr-only">
             시간선택
           </label>
@@ -252,17 +253,17 @@ function App() {
             value={value}
             min="0"
             max="23"
-            className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer "
+            className="w-full h-2 bg-slate-600 rounded-lg  appearance-none cursor-pointer "
           />
-          <span className="text-sm text-gray-500 absolute start-0 -bottom-5">
+          <span className="text-xs md:text-sm text-gray-500 absolute start-0 -bottom-5">
             0시
           </span>
-          <span className="text-sm text-gray-500 absolute end-0 -bottom-5">
+          <span className="text-xs md:text-sm text-gray-500 absolute end-0 -bottom-5">
             23시
           </span>
         </div>
         <div>
-          <div className="row flex mb-3 w-100" role="group">
+          <div className="row flex mb-1 md:mb-3 w-100" role="group">
             <button
               type="button"
               onClick={() => setSelectedCategory("total")}

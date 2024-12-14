@@ -149,7 +149,6 @@ const LegendCanvas = ({ category, toggleOn }) => {
 
   return (
     <div>
-      범례
       <div className="grid grid-cols-6">
         <div className="col-span-2">
           <canvas
