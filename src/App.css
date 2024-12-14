@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
+body {
   font-size: 12px;
+  background-size: auto 100vh;
+  background-image: url('./bg.png');
+  
+  @media (max-width: 600px) {
+    background-size: 100vw auto;
+  } 
 }

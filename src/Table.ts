@@ -1,10 +1,8 @@
 import { format } from "d3-format";
-
-export function generatePopulationTable(data) {
-  const ageGroups = ["0", "10", "20", "30", "40", "50", "60", "70"];
-
+const ageGroups = ["0", "10", "20", "30", "40", "50", "60", "70"];
+export function generatePopulationTable({ data, time }) {
   let tableHTML = `
-    <h2>${data.name}</h2>
+    <h2 class="font-bold text-lg">${data.name} ${time}시</h2>
     <table class="table-fixed" border="1">
       <thead>
         <tr>

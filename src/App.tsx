@@ -16,9 +16,9 @@ import { generatePopulationTable } from "./table";
 import "./App.css";
 
 const INITIAL_VIEW_STATE: MapViewState = {
-  longitude: 126.97,
-  latitude: 37.56,
-  zoom: 13,
+  longitude: 126.9592942,
+  latitude: 37.5216503,
+  zoom: 12,
   pitch: 30,
   // bearing: 0,
 };
@@ -73,12 +73,15 @@ function App() {
       if (!currentStat.length) return false;
       return {
         html: generatePopulationTable({
-          ...currentStat[0],
-          name: object.properties.ADM_NM,
+          data: {
+            ...currentStat[0],
+            name: object.properties.ADM_NM,
+          },
+          time: value,
         }),
       };
     },
-    [currentData, showTooltip]
+    [currentData, showTooltip, value]
   );
 
   function getPolygonLayers(selectedCategory: string, data, prefix) {
@@ -218,12 +221,9 @@ function App() {
     id: "all-geojson-layer",
     data: dong,
     getLineColor: [255, 255, 255, 255],
-    getFillColor: [120, 120, 120, 205],
+    getFillColor: [120, 120, 120, 250],
     getLineWidth: 10,
     pickable: true,
-    onClick: (e) => {
-      console.log(e);
-    },
   });
 
   const layers = isSplitScreen
@@ -238,11 +238,11 @@ function App() {
         controller
         getTooltip={getTooltip}
       ></DeckGL>
-      <div className="absolute bg-slate-100/80 p-5 right-1 top-1 w-80 rounded-sm">
-        <h1 className="font-bold text-lg"> 2024년 12월 7일 서울 생활인구</h1>
+      <div className="absolute bg-slate-100/80 p-3 right-2 top-2 md:w-80 w-64 rounded-sm">
+        <h1 className="font-bold md:text-lg"> 2024년 12월 7일 서울 생활인구</h1>
         <div className="relative mb-8">
           <span> 시간 : {value}시</span>
-          <label for="labels-range-input" class="sr-only">
+          <label htmlFor="labels-range-input" className="sr-only">
             시간선택
           </label>
           <input
@@ -267,7 +267,7 @@ function App() {
               type="button"
               onClick={() => setSelectedCategory("total")}
               className={
-                "w-2/6 rounded-md rounded-r-none border border-r-0 border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                "w-2/6 rounded-md rounded-r-none border border-r-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
                 (selectedCategory === "total" ? "bg-slate-800 text-white" : "")
               }
             >
@@ -277,7 +277,7 @@ function App() {
               type="button"
               onClick={() => setSelectedCategory("gender")}
               className={
-                "w-2/6 rounded-md rounded-r-none rounded-l-none border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                "w-2/6 rounded-md rounded-r-none rounded-l-none border border-slate-300 py-1 px-4  md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
                 (selectedCategory === "gender" ? "bg-slate-800 text-white" : "")
               }
             >
@@ -287,7 +287,7 @@ function App() {
               type="button"
               onClick={() => setSelectedCategory("agegroup")}
               className={
-                "w-2/6 rounded-md rounded-l-none border border-l-0 border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                "w-2/6 rounded-md rounded-l-none border border-l-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
                 (selectedCategory === "agegroup"
                   ? "bg-slate-800 text-white"
                   : "")
@@ -306,8 +306,8 @@ function App() {
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
           />
           <label
-            for="default-checkbox"
-            className="ms-2 text-sm font-medium text-gray-900 "
+            htmlFor="default-checkbox"
+            className="ms-2 md:text-sm font-medium text-gray-900 "
           >
             전주 (11/30) 데이터와 비교하기
           </label>
@@ -321,15 +321,35 @@ function App() {
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
           />
           <label
-            for="tooltip-checkbox"
-            className="ms-2 text-sm font-medium text-gray-900 "
+            htmlFor="tooltip-checkbox"
+            className="ms-2 md:text-sm font-medium text-gray-900 "
           >
             툴팁을 통해 자세한 내역 보기
           </label>
         </div>
+        <div className="text-xs md:text-sm mt-2">
+          <div>
+            데이터 출처:{" "}
+            <a
+              className="underline"
+              href="https://data.seoul.go.kr/dataVisual/seoul/seoulLivingPopulation.do"
+            >
+              서울열린데이터광장
+            </a>
+          </div>
+          <div>
+            배경이미지 출처:{" "}
+            <a
+              className="underline"
+              href="https://drive.google.com/drive/folders/1Q7hmPnpY3GkK7zaB2Wo3aUOxVpTWsJY8"
+            >
+              FDSC 구글드라이브
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div className="absolute bg-slate-100/80 p-2 right-72 bottom-1 w-32 rounded-sm">
+      <div className="absolute bg-slate-100/80 p-3 right-2 bottom-1 w-28 rounded-sm">
         <Legend category={selectedCategory} toggleOn={isSplitScreen} />
       </div>
     </>
