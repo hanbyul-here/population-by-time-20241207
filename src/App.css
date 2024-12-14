@@ -11,3 +11,7 @@ body {
     background-size: 100vw auto;
   } 
 }
+
+.text-xxs {
+  font-size: 0.5rem;
+}

@@ -75,7 +75,7 @@ export const totalColor = [200, 100, 100];
 const ageGroups = ["0", "10", "20", "30", "40", "50", "60", "70"];
 export function generatePopulationTable({ data, time }) {
   let tableHTML = `
-    <small> 2024년 12월 7일</small>
+    <span class="text-xxs"> 2024년 12월 7일</span>
     <h2 class="font-bold text-md">${data.name} ${time}시</h2>
     <table class="table-fixed" border="1">
       <thead>
@@ -101,9 +101,10 @@ export function generatePopulationTable({ data, time }) {
   tableHTML += `
       </tbody>
     </table>
-    <p class="text-right mt-1"><strong>총합:</strong> ${format(",.0f")(
+    <p class="mt-1"><strong>총생활인구*:</strong> ${format(",.0f")(
       data.pop
     )}</p>
+    <span class="text-xxs">*각 값의 합은 전체합계와 일치하지 않을 수 있습니다.</span>
   `;
 
   return tableHTML;
