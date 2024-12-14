@@ -80,9 +80,9 @@ export function generatePopulationTable({ data, time }) {
     <table class="table-fixed" border="1">
       <thead>
         <tr>
-          <th class="px-3 py-3">연령대</th>
-          <th class="px-6 py-3">여성 </th>
-          <th class="px-6 py-3">남성 </th>
+          <th class="px-3 md:py-3">연령대</th>
+          <th class="px-6 md:py-3">여성 </th>
+          <th class="px-6 md:py-3">남성 </th>
         </tr>
       </thead>
       <tbody>
