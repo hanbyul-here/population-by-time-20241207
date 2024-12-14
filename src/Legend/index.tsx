@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ageColors, genderColors, totalColor } from "../utils";
 // ㅠㅠ
 const LegendCanvas = ({ category, toggleOn }) => {
-  const canvasRef = useRef(null);
+  const [showFullLegend, setShowFullLegend] = useState(true);
 
+  const canvasRef = useRef(null);
   const size = 20; // Canvas size
   const radius = 10;
   const centerX = size / 2;
@@ -149,23 +150,25 @@ const LegendCanvas = ({ category, toggleOn }) => {
 
   return (
     <div>
-      <div className="grid grid-cols-6">
-        <div className="col-span-2">
-          <canvas
-            ref={canvasRef}
-            width={size}
-            height={size * heightScale}
-            style={{ width: `${size}px`, height: `${size * heightScale}px` }}
-          />
+      {showFullLegend && (
+        <div className="grid grid-cols-6">
+          <div className="col-span-2">
+            <canvas
+              ref={canvasRef}
+              width={size}
+              height={size * heightScale}
+              style={{ width: `${size}px`, height: `${size * heightScale}px` }}
+            />
+          </div>
+          <div className="col-span-4">
+            {currentLabel.map((label) => (
+              <div key={label} style={{ height: "20px" }} className="w-100">
+                {label}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="col-span-4">
-          {currentLabel.map((label) => (
-            <div key={label} style={{ height: "20px" }} className="w-100">
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

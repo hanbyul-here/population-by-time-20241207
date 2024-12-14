@@ -30,6 +30,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState("gender");
   const [isSplitScreen, setIsSplitScreen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
+  const [showFull, setShowFull] = useState(true);
 
   useEffect(() => {
     async function loadBoundaries() {
@@ -242,112 +243,128 @@ function App() {
         <h1 className="font-bold md:text-lg">
           2024년 12월 7일 {value}시 서울생활인구
         </h1>
-        <div className="relative md:mb-8 mb-5">
-          <label htmlFor="labels-range-input" className="sr-only">
-            시간선택
-          </label>
-          <input
-            id="labels-range-input"
-            onChange={handleChange}
-            type="range"
-            value={value}
-            min="0"
-            max="23"
-            className="w-full h-2 bg-slate-600 rounded-lg  appearance-none cursor-pointer "
-          />
-          <span className="text-xs md:text-sm text-gray-500 absolute start-0 -bottom-5">
-            0시
-          </span>
-          <span className="text-xs md:text-sm text-gray-500 absolute end-0 -bottom-5">
-            23시
-          </span>
-        </div>
-        <div>
-          <div className="row flex mb-1 md:mb-3 w-100" role="group">
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("total")}
-              className={
-                "w-2/6 rounded-md rounded-r-none border border-r-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
-                (selectedCategory === "total" ? "bg-slate-800 text-white" : "")
-              }
-            >
-              전체
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("gender")}
-              className={
-                "w-2/6 rounded-md rounded-r-none rounded-l-none border border-slate-300 py-1 px-4  md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
-                (selectedCategory === "gender" ? "bg-slate-800 text-white" : "")
-              }
-            >
-              성별
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("agegroup")}
-              className={
-                "w-2/6 rounded-md rounded-l-none border border-l-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
-                (selectedCategory === "agegroup"
-                  ? "bg-slate-800 text-white"
-                  : "")
-              }
-            >
-              나이별
-            </button>
-          </div>
-        </div>
-        <div>
-          <input
-            id="default-checkbox"
-            type="checkbox"
-            checked={isSplitScreen}
-            onChange={handleToggle}
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label
-            htmlFor="default-checkbox"
-            className="ms-2 md:text-sm font-medium text-gray-900 "
-          >
-            전주 (11/30) 데이터와 비교하기
-          </label>
-        </div>
-        <div>
-          <input
-            id="tooltip-checkbox"
-            type="checkbox"
-            checked={showTooltip}
-            onChange={handleTooltipToggle}
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label
-            htmlFor="tooltip-checkbox"
-            className="ms-2 md:text-sm font-medium text-gray-900 "
-          >
-            툴팁을 통해 자세한 내역 보기
-          </label>
-        </div>
-        <div className="text-xs md:text-sm mt-2">
+        {showFull && (
           <div>
-            데이터 출처:{" "}
-            <a
-              className="underline"
-              href="https://data.seoul.go.kr/dataVisual/seoul/seoulLivingPopulation.do"
-            >
-              서울열린데이터광장
-            </a>
+            <div className="relative md:mb-8 mb-5">
+              <label htmlFor="labels-range-input" className="sr-only">
+                시간선택
+              </label>
+              <input
+                id="labels-range-input"
+                onChange={handleChange}
+                type="range"
+                value={value}
+                min="0"
+                max="23"
+                className="w-full h-2 bg-slate-600 rounded-lg  appearance-none cursor-pointer "
+              />
+              <span className="text-xs md:text-sm text-gray-500 absolute start-0 -bottom-5">
+                0시
+              </span>
+              <span className="text-xs md:text-sm text-gray-500 absolute end-0 -bottom-5">
+                23시
+              </span>
+            </div>
+            <div>
+              <div className="row flex mb-1 md:mb-3 w-100" role="group">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("total")}
+                  className={
+                    "w-2/6 rounded-md rounded-r-none border border-r-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                    (selectedCategory === "total"
+                      ? "bg-slate-800 text-white"
+                      : "")
+                  }
+                >
+                  전체
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("gender")}
+                  className={
+                    "w-2/6 rounded-md rounded-r-none rounded-l-none border border-slate-300 py-1 px-4  md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                    (selectedCategory === "gender"
+                      ? "bg-slate-800 text-white"
+                      : "")
+                  }
+                >
+                  성별
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("agegroup")}
+                  className={
+                    "w-2/6 rounded-md rounded-l-none border border-l-0 border-slate-300 py-1 px-4 md:py-2 md:px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-gray-900 " +
+                    (selectedCategory === "agegroup"
+                      ? "bg-slate-800 text-white"
+                      : "")
+                  }
+                >
+                  나이별
+                </button>
+              </div>
+            </div>
+            <div>
+              <input
+                id="default-checkbox"
+                type="checkbox"
+                checked={isSplitScreen}
+                onChange={handleToggle}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label
+                htmlFor="default-checkbox"
+                className="ms-2 md:text-sm font-medium text-gray-900 "
+              >
+                전주 (11/30) 데이터와 비교하기
+              </label>
+            </div>
+            <div>
+              <input
+                id="tooltip-checkbox"
+                type="checkbox"
+                checked={showTooltip}
+                onChange={handleTooltipToggle}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label
+                htmlFor="tooltip-checkbox"
+                className="ms-2 md:text-sm font-medium text-gray-900 "
+              >
+                툴팁을 통해 자세한 내역 보기
+              </label>
+            </div>
+            <div className="text-xs md:text-sm mt-2">
+              <div>
+                데이터 출처:{" "}
+                <a
+                  className="underline"
+                  href="https://data.seoul.go.kr/dataVisual/seoul/seoulLivingPopulation.do"
+                >
+                  서울열린데이터광장
+                </a>
+              </div>
+              <div>
+                배경이미지 출처:{" "}
+                <a
+                  className="underline"
+                  href="https://drive.google.com/drive/folders/1Q7hmPnpY3GkK7zaB2Wo3aUOxVpTWsJY8"
+                >
+                  FDSC 구글드라이브
+                </a>
+              </div>
+            </div>
           </div>
-          <div>
-            배경이미지 출처:{" "}
-            <a
-              className="underline"
-              href="https://drive.google.com/drive/folders/1Q7hmPnpY3GkK7zaB2Wo3aUOxVpTWsJY8"
-            >
-              FDSC 구글드라이브
-            </a>
-          </div>
-        </div>
+        )}
+        <button
+          className="md:hidden mb-1 bg-transparent text-gray-800 font-semibold py-1 px-2 rounded absolute bottom-0 right-0"
+          onClick={() => {
+            setShowFull(!showFull);
+          }}
+        >
+          {showFull ? "가리기▲" : "보기▼"}
+        </button>
       </div>
 
       <div className="absolute bg-slate-100/80 p-3 right-2 bottom-1 w-28 rounded-sm">
