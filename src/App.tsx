@@ -11,8 +11,8 @@ import {
   ageColors,
   genderColors,
   totalColor,
+  generatePopulationTable,
 } from "./utils";
-import { generatePopulationTable } from "./table";
 import "./App.css";
 
 const INITIAL_VIEW_STATE: MapViewState = {
